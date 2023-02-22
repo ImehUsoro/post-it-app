@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-hot-toast";
 
 const AddPosts = () => {
   const [title, setTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
+  let toastPostId: string;
 
   // Create a post
   const { mutate } = useMutation(
@@ -15,7 +17,14 @@ const AddPosts = () => {
       return data;
     },
     {
-      onSuccess: () => {
+      onSuccess: (result) => {
+        setTitle("");
+        setIsDisabled(false);
+        toast.success(result.message, { id: toastPostId });
+      },
+      onError: (err) => {
+        if (err instanceof AxiosError)
+          toast.error(err?.response?.data.message, { id: toastPostId });
         setIsDisabled(false);
       },
     }
@@ -23,10 +32,9 @@ const AddPosts = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    toastPostId = toast.loading("Creating a post...");
     setIsDisabled(true);
     await mutate(title);
-    setTitle("");
-    // setIsDisabled(false);
   };
 
   return (
@@ -55,7 +63,7 @@ const AddPosts = () => {
         <button
           className="text-sm bg-teal-600 text-white py-2 px-6 rounded-xl disabled:opacity-25"
           type="submit"
-          disabled={isDisabled || title.length > 300}
+          disabled={isDisabled || title.length > 300 || title.length < 1}
         >
           Create a post
         </button>

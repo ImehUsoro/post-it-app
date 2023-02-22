@@ -9,13 +9,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     const session = await getServerSession(req, res, authOptions);
 
     if (!session)
-      return res.status(401).json({ message: "Sign in to make a post" });
-
-    const title: string = req.body.title;
+      return res.status(401).json({ message: "Sign in to get posts" });
 
     const user = await client.user.findUnique({
       where: {
@@ -23,22 +21,12 @@ export default async function handler(
       },
     });
 
-    if (!title) return res.status(400).json({ message: "Title is required" });
-
-    if (title.length > 300)
-      return res.status(400).json({ message: "Title is too long" });
-
-    // Create a post
+    // Fetch all posts
     try {
-      const result = await client.post.create({
-        data: {
-          title,
-          userId: user?.id,
-        },
-      });
+      const result = await client.post.findMany();
       return res
-        .status(201)
-        .json({ ...result, message: "Post successfully created" });
+        .status(200)
+        .json({ ...result, message: "Successfully fetched posts" });
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error" });
     }
