@@ -7,7 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Post {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  published Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
 model Account {
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   id                String  @id @default(cuid())
   userId            String
   type              String
@@ -20,19 +31,8 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-}
-
-model Post {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  published Boolean  @default(false)
-  userId    String
-  User      User     @relation(fields: [userId], references: [id])
 }
 
 model Session {
@@ -40,18 +40,21 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  Account       Account[]
-  Post          Post[]
-  Session       Session[]
+  id              String    @id @default(cuid())
+  user            String?
+  name            String?
+  email           String?   @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  accessGranted   Boolean   @default(false)
+  isAdministrator Boolean   @default(false)
+  Post            Post[]
 }
 
 model VerificationToken {
