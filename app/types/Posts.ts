@@ -9,7 +9,7 @@ export type PostTypes = {
     image: string;
     name: string;
   };
-  Comment: {
+  Comment?: {
     id: string;
     message: string;
     postId: string;

@@ -6,12 +6,6 @@ import AddPosts from "./components/AddPosts";
 import Post from "./components/Post";
 
 import { PostTypes } from "./types/Posts";
-// interface PostType {
-//   id: any;
-//   avatar: any;
-//   name: any;
-//   postTitle: any;
-// }
 
 const allPosts = async () => {
   const response = await axios.get("/api/posts/getPosts");
@@ -23,7 +17,7 @@ export default function Home() {
     queryKey: ["allPosts"],
     queryFn: allPosts,
   });
-  console.log(data);
+
 
   if (error) return <div>Something went wrong</div>;
 

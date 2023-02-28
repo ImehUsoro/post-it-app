@@ -10,30 +10,23 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "GET") {
+  if (req.method === "DELETE") {
     const session = await getServerSession(req, res, authOptions);
 
-    // if (!session)
-    //   return res.status(401).json({ message: "Sign in to get posts" });
+    if (!session)
+      return res.status(401).json({ message: "Sign in to view your posts" });
 
-    // const activeUser = await client.user.findUnique({
-    //   where: {
-    //     email: session?.user?.email,
-    //   },
-    // });
-
-    // Fetch all posts
+    // Get Auth User's posts
     try {
-      const result = await client.post.findMany({
-        include: {
-          user: true,
-          Comment: true,
-        },
-        orderBy: {
-          createdAt: "desc",
+      const postId = req.body.id;
+      const result = await prisma.post.delete({
+        where: {
+          id: postId,
         },
       });
-      return res.status(200).json(result);
+      return res
+        .status(200)
+        .json({ ...result, message: "Post successfully deleted" });
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error" });
     }

@@ -9,7 +9,7 @@ interface PropType {
   name: string;
   postTitle: string;
   comments: any;
-    // comments: CommentTypes[];
+  // comments: CommentTypes[];
 }
 
 const Post = ({ id, avatar, name, comments, postTitle }: PropType) => {
@@ -31,7 +31,7 @@ const Post = ({ id, avatar, name, comments, postTitle }: PropType) => {
       <div className="flex gap-4 items-center cursor-pointer">
         <Link href={`/posts/${id}`}>
           <p className="text-sm font-bold text-gray-700">
-            Comments: {comments.length}
+            {comments.length} Comment{comments.length > 1 ? "s" : ""}
           </p>
         </Link>
       </div>

@@ -4,41 +4,38 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
 import client from "../../../prisma/client";
+import prisma from "../../../prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     const session = await getServerSession(req, res, authOptions);
 
     if (!session)
-      return res.status(401).json({ message: "Sign in to make a post" });
+      return res.status(401).json({ message: "Sign in to view your posts" });
 
-    const title: string = req.body.title;
-
-    const user = await client.user.findUnique({
-      where: {
-        email: session?.user?.email,
-      },
-    });
-
-    if (!title) return res.status(400).json({ message: "Title is required" });
-
-    if (title.length > 300)
-      return res.status(400).json({ message: "Title is too long" });
-
-    // Create a post
+    // Get Auth User's posts
     try {
-      const result = await client.post.create({
-        data: {
-          title,
-          userId: user?.id,
+      const result = await prisma.user.findUnique({
+        where: {
+          email: session?.user?.email || undefined,
+        },
+        include: {
+          Post: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            include: {
+              Comment: true,
+            },
+          },
         },
       });
       return res
         .status(201)
-        .json({ ...result, message: "Post successfully created" });
+        .json({ ...result, message: "User's post successfully retrieved" });
     } catch (error) {
       return res.status(500).json({ message: "Internal Server Error" });
     }
