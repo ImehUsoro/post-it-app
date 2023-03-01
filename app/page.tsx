@@ -18,24 +18,26 @@ export default function Home() {
     queryFn: allPosts,
   });
 
-
   if (error) return <div>Something went wrong</div>;
 
-  if (isLoading) return <div>Loading...</div>;
   return (
     <main>
       <AddPosts />
 
-      {data?.map((post) => (
-        <Post
-          comments={post.Comment}
-          key={post.id}
-          id={post.id}
-          avatar={post.user.image}
-          name={post.user.name}
-          postTitle={post.title}
-        />
-      ))}
+      {isLoading ? (
+        <div>Loading..</div>
+      ) : (
+        data?.map((post) => (
+          <Post
+            comments={post.Comment}
+            key={post.id}
+            id={post.id}
+            avatar={post.user.image}
+            name={post.user.name}
+            postTitle={post.title}
+          />
+        ))
+      )}
     </main>
   );
 }

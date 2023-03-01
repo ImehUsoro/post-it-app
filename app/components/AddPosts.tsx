@@ -50,7 +50,7 @@ const AddPosts = () => {
           name="title"
           placeholder="What's on your mind?"
           value={title}
-          className="p-4 text-lg rounded-md my-2 bg-gray-200"
+          className="p-4 text-lg rounded-md my-2 bg-gray-200 resize-none"
         ></textarea>
       </div>
 
