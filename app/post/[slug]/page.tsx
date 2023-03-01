@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 
-type URL = {
+type PageProps = {
   params: {
     slug: string;
   };
@@ -18,7 +18,7 @@ const fetchDetails = async (slug: string) => {
   return response.data;
 };
 
-export default function PostDetail(url: URL) {
+export default function PostDetail(url: PageProps) {
   const { data, isLoading } = useQuery<PostTypes>({
     queryKey: ["detail-post"],
     queryFn: () => fetchDetails(url.params.slug),
