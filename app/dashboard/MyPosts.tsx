@@ -19,7 +19,6 @@ export default function MyPosts() {
 
   if (isLoading) return <div>Posts are Loading...</div>;
 
-  console.log("dataaa=====", data?.Post);
   return (
     <main>
       {data?.Post?.map((post) => (

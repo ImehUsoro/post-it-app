@@ -33,7 +33,7 @@ export default async function handler(
       const result = await client.post.create({
         data: {
           title,
-          userId: user?.id,
+          userId: user?.id || "",
         },
       });
       return res

@@ -4,12 +4,17 @@ import Link from "next/link";
 import { CommentTypes } from "../types/Posts";
 
 interface PropType {
-  id: string;
+  id: string | undefined;
   avatar: string;
-  name: string;
-  postTitle: string;
-  comments: any;
-  // comments: CommentTypes[];
+  name: string | undefined;
+  postTitle: string | undefined;
+  comments: {
+    id: string;
+    message: string;
+    createdAt: string;
+    userId: string;
+    postId: string;
+  }[];
 }
 
 const Post = ({ id, avatar, name, comments, postTitle }: PropType) => {
@@ -29,7 +34,7 @@ const Post = ({ id, avatar, name, comments, postTitle }: PropType) => {
         <p className="break-all">{postTitle}</p>
       </div>
       <div className="flex gap-4 items-center cursor-pointer">
-        <Link href={`/posts/${id}`}>
+        <Link href={`/post/${id}`}>
           <p className="text-sm font-bold text-gray-700">
             {comments.length} Comment{comments.length > 1 ? "s" : ""}
           </p>
