@@ -1,12 +1,12 @@
 "use client";
-import AddComment from "@/app/components/AddComments";
-import Post from "@/app/components/Post";
-import { PostTypes } from "@/app/types/Posts";
+import AddComment from "../../components/AddComments";
+import Post from "../../components/Post";
+import { PostTypes } from "../../types/Posts";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 
-type PageProps = {
+type URL = {
   params: {
     slug: string;
   };
@@ -18,13 +18,13 @@ const fetchDetails = async (slug: string) => {
   return response.data;
 };
 
-export default function PostDetail(url: PageProps) {
+export default function PostDetail(url: URL) {
   const { data, isLoading } = useQuery<PostTypes>({
     queryKey: ["detail-post"],
     queryFn: () => fetchDetails(url.params.slug),
   });
   if (isLoading) return "Loading";
-  console.log(data?.Comment);
+
   return (
     <div>
       <Post

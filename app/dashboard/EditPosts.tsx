@@ -35,8 +35,6 @@ export default function EditPost({
       await axios.delete(`/api/posts/deletePost`, { data: { id } }),
     {
       onSuccess: (data) => {
-        // console.log("deleted");
-        // console.log(data);
         toast.success("Successfully deleted post", {
           id: deleteToastId,
         });
