@@ -5,6 +5,7 @@ import { PostTypes } from "../../types/Posts";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
+import React from "react";
 
 type URL = {
   params: {
@@ -18,7 +19,7 @@ const fetchDetails = async (slug: string) => {
   return response.data;
 };
 
-export default function PostDetail(url: URL) {
+function PostDetail(url: URL) {
   const { data, isLoading } = useQuery<PostTypes>({
     queryKey: ["detail-post"],
     queryFn: () => fetchDetails(url.params.slug),
@@ -55,3 +56,5 @@ export default function PostDetail(url: URL) {
     </div>
   );
 }
+
+export default PostDetail as unknown as React.FC;
